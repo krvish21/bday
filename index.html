@@ -368,6 +368,23 @@
     50%{ height:13px; }
   }
 
+  .confetti-piece{
+    position:fixed;
+    top:-20px;
+    width:8px;
+    height:12px;
+    z-index:50;
+    opacity:0.95;
+    pointer-events:none;
+  }
+
+  @keyframes confetti-fall{
+    to{
+      transform:translateY(110vh) rotate(480deg);
+      opacity:0.85;
+    }
+  }
+
   @media (max-width:400px){
     .headline{ font-size:1.75rem; }
     .polaroid{ width:130px; }
@@ -469,6 +486,8 @@
       const delay = parseInt(el.getAttribute('data-d'),10) * 140 + 400;
       setTimeout(()=> el.classList.add('show'), delay);
     });
+
+    burstConfetti();
   }
 
   function closeCard(){
@@ -479,6 +498,28 @@
       opened = false;
       cover.style.pointerEvents = 'auto';
     }, 1150);
+
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+    musicToggle.classList.remove('playing');
+    musicToggle.classList.remove('show');
+  }
+
+  const confettiColors = ['#C6A25A', '#6B2438', '#2E4A3B', '#B4593F', '#DCC48F'];
+
+  function burstConfetti(){
+    for(let i=0;i<34;i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random()*100 + 'vw';
+      piece.style.background = confettiColors[Math.floor(Math.random()*confettiColors.length)];
+      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '1px';
+      const duration = 2.6 + Math.random()*1.8;
+      piece.style.animation = `confetti-fall ${duration}s ease-in forwards`;
+      piece.style.animationDelay = (Math.random()*0.35) + 's';
+      document.body.appendChild(piece);
+      setTimeout(()=> piece.remove(), (duration+0.6)*1000);
+    }
   }
 
   const musicToggle = document.getElementById('musicToggle');
