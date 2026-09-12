@@ -296,6 +296,25 @@
     .cover, .fade-in, .tap-hint{ transition:none; animation:none; }
   }
 
+  .close-btn{
+    margin-top:22px;
+    font-family:'Jost', sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--burgundy);
+    background:none;
+    border:1px solid var(--gold);
+    border-radius:999px;
+    padding:9px 22px;
+    cursor:pointer;
+    transition:background .3s ease, color .3s ease;
+  }
+  .close-btn:hover{
+    background:var(--burgundy);
+    color:var(--gold-soft);
+  }
+
   @media (max-width:400px){
     .headline{ font-size:1.75rem; }
     .polaroid{ width:130px; }
@@ -323,7 +342,7 @@
         </div>
 
         <h1 class="headline fade-in" data-d="1">Happy Birthday</h1>
-        <p class="subhead fade-in" data-d="2">celebrating you today</p>
+        <p class="subhead fade-in" data-d="2">wishing you a beautiful day</p>
 
         <div class="photos fade-in" data-d="3">
           <div class="polaroid-wrap">
@@ -343,12 +362,14 @@
         <div class="divider fade-in" data-d="4"></div>
 
         <div class="message fade-in" data-d="5">
-          <p>Wishing you the happiest of birthdays! May your day be filled with laughter, good company, and all the little things that make you smile.</p>
+          <p>Wishing you the happiest of birthdays! May your day be filled with laughter, loved ones around you, and all the little things that make you smile.</p>
           <p>May the year ahead bring you good health, peace, and many beautiful moments worth celebrating.</p>
           <p>Here's to you, today and always.</p>
         </div>
 
         <p class="signoff fade-in" data-d="6">Happy Birthday!</p>
+
+        <button class="close-btn fade-in" data-d="7" id="closeBtn" aria-label="Close card">Close card</button>
       </div>
     </div>
 
@@ -375,20 +396,34 @@
 
 <script>
   const cover = document.getElementById('cover');
+  const closeBtn = document.getElementById('closeBtn');
+  const fadeEls = document.querySelectorAll('.fade-in');
   let opened = false;
 
-  cover.addEventListener('click', () => {
+  function openCard(){
     if(opened) return;
     opened = true;
+    cover.style.pointerEvents = 'none';
     cover.classList.add('opened');
 
-    document.querySelectorAll('.fade-in').forEach(el=>{
+    fadeEls.forEach(el=>{
       const delay = parseInt(el.getAttribute('data-d'),10) * 140 + 400;
       setTimeout(()=> el.classList.add('show'), delay);
     });
+  }
 
-    setTimeout(()=>{ cover.style.pointerEvents = 'none'; }, 1200);
-  });
+  function closeCard(){
+    if(!opened) return;
+    fadeEls.forEach(el => el.classList.remove('show'));
+    cover.classList.remove('opened');
+    setTimeout(()=>{
+      opened = false;
+      cover.style.pointerEvents = 'auto';
+    }, 1150);
+  }
+
+  cover.addEventListener('click', openCard);
+  closeBtn.addEventListener('click', closeCard);
 </script>
 
 </body>
